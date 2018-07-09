@@ -6,8 +6,11 @@ const jwt = require("jsonwebtoken");
 const keys = require("../../config/keys");
 const passport = require("passport");
 
+const validateRegisterInput = require("../../validation/register");
+const validateLoginInput = require("../../validation/login");
+
 const SALT_SIZE = 10;
-const EMAIL_ALREADY_EXISTS_ERROR = 400;
+const BAD_REQUEST = 400;
 
 // Load User model
 const User = require("../../models/User");
@@ -23,11 +26,17 @@ router.get("/test", (req, res) =>
 // @desc    Register user
 // @access  Public
 router.post("/register", (req, res) => {
+  const { errors, isValid } = validateRegisterInput(req.body);
+
+  // Check register validations
+  if (!isValid) {
+    return res.status(BAD_REQUEST).json(errors);
+  }
+
   User.findOne({ email: req.body.email }).then(user => {
     if (user) {
-      return res.status(EMAIL_ALREADY_EXISTS_ERROR).json({
-        email: "Email already exists"
-      });
+      errors.email = "Email already exists";
+      return res.status(BAD_REQUEST).json(errors);
     } else {
       const avatar = gravatar.url(req.body.email, {
         s: "200", // Size
@@ -62,15 +71,21 @@ router.post("/register", (req, res) => {
 // @desc    Login user / Returning JWT Token
 // @access  Public
 router.post("/login", (req, res) => {
+  const { errors, isValid } = validateLoginInput(req.body);
+
+  // Check login validations
+  if (!isValid) {
+    return res.status(BAD_REQUEST).json(errors);
+  }
+
   const email = req.body.email;
   const password = req.body.password;
 
   // Find user by email
   User.findOne({ email }).then(user => {
     if (!user) {
-      return res.status(404).json({
-        email: "User not found"
-      });
+      errors.email = "User not found";
+      return res.status(404).json(errors);
     }
 
     // Check password
@@ -92,7 +107,8 @@ router.post("/login", (req, res) => {
           }
         );
       } else {
-        return res.status(400).json({ password: "Password incorrect" });
+        errors.password = "Password incorrect";
+        return res.status(BAD_REQUEST).json(errors);
       }
     });
   });
