@@ -1,5 +1,9 @@
 import React, { Component } from "react";
+
+// Router Stuff
 import { BrowserRouter as Router, Route } from "react-router-dom";
+
+// Redux stuff
 import { Provider } from "react-redux";
 import store from "./store";
 
