@@ -1,5 +1,5 @@
-module.exports = {
-  mongoURI:
-    "mongodb://paulo:paulovinicius1@ds133041.mlab.com:33041/dev-connect-dacaproject",
-  secretOrKey: "secret"
-};
+if (process.env.NODE_ENV === "production") {
+  module.exports = require("./keys_prod");
+} else {
+  module.exports = require("./keys_dev");
+}
