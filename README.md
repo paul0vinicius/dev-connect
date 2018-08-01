@@ -6,6 +6,8 @@ A little social network for developers using (M)ongo (E)xpress (R)eact (N)ode St
 
 Available on [Heroku](https://dev1-connect.herokuapp.com/).
 
+[Documentation](https://docs.google.com/document/d/1F3MG9lyJK1fUhvzWRRhqzb3zMpfGMhZ3ljDYIXHLMP4/edit)
+
 ## Available Scripts:
 
 First of all, install all dependencies:
